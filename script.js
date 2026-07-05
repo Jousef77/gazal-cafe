@@ -524,6 +524,15 @@ function injectMobileFixes() {
                 font-size: 18px !important;
             }
         }
+        /* لينكات التواصل الجديدة في الفوتر (رقم الواتساب واللوكيشن) */
+        .footer-contact a {
+            color: var(--text-gray, #ccc3b8) !important;
+            text-decoration: none !important;
+            transition: color .2s ease !important;
+        }
+        .footer-contact a:hover {
+            color: var(--primary-color, #b38b5d) !important;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -587,13 +596,37 @@ function startCounters() {
     });
 }
 
-// 6. التعامل مع الفورم وحجز الصالات الفوري
+// 6. التعامل مع الفورم وحجز الصالات الفوري - بيبعت تفاصيل الحجز على الواتساب مباشرة
+const WHATSAPP_NUMBER = "201122833905"; // +20 11 22833905
+
+const zoneLabels = {
+    "cafe": "طاولة كافيه (روقان)",
+    "ps-single": "بلايستيشن - صالة عامة",
+    "ps-vip": "بلايستيشن - غرفة VIP خاصة"
+};
+
 const bookingForm = document.getElementById('bookingForm');
 if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
         e.preventDefault();
+
         const name = document.getElementById('name').value;
-        alert(`يا هلا يا ${name}! تم استلام طلب حجزك بنجاح. هنتواصل معاك فوراً لتأكيد الحجز وتجهيز مكانك 🎮☕`);
+        const phone = document.getElementById('phone').value;
+        const zoneValue = document.getElementById('zone').value;
+        const time = document.getElementById('time').value;
+        const zoneText = zoneLabels[zoneValue] || zoneValue;
+
+        const message =
+            `مرحباً، عايز أحجز في غزال كافيه 🎮☕\n\n` +
+            `الاسم: ${name}\n` +
+            `رقم الموبايل: ${phone}\n` +
+            `نوع الحجز: ${zoneText}\n` +
+            `وقت الحضور: ${time}`;
+
+        const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+        alert(`يا هلا يا ${name}! هيتم تحويلك دلوقتي للواتساب عشان تأكد طلب الحجز.`);
+        window.open(whatsappUrl, '_blank');
         bookingForm.reset();
     });
 }
