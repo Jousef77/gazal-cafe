@@ -448,6 +448,86 @@ function injectGlobalAnimations() {
     document.head.appendChild(style);
 }
 
+// ==========================================
+// إصلاحات خاصة بشاشات الموبايل (لأن style.css عنده Breakpoint واحد بس على 768px)
+// ==========================================
+function injectMobileFixes() {
+    if (document.getElementById('mobile-dynamic-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'mobile-dynamic-styles';
+    style.textContent = `
+        /* عنوان الهيرو ونصه بيبقوا مرنين مع حجم الشاشة بدل ما يكسروا التصميم */
+        .hero-content h1 {
+            font-size: clamp(26px, 8vw, 56px) !important;
+        }
+        .hero-content p {
+            font-size: clamp(14px, 3.8vw, 20px) !important;
+        }
+        .section-header h2 {
+            font-size: clamp(22px, 6vw, 36px) !important;
+        }
+
+        /* تابس الكاتيجورى: على الموبايل بتبقى صف واحد قابل للسحب أفقيًا بدل ما تتكسر */
+        @media (max-width: 600px) {
+            .category-tabs {
+                flex-wrap: nowrap !important;
+                justify-content: flex-start !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 4px 4px 14px !important;
+                margin: 10px 0 25px !important;
+                scrollbar-width: thin !important;
+            }
+            .category-tab {
+                flex: 0 0 auto !important;
+                padding: 8px 14px !important;
+                font-size: 13px !important;
+                white-space: nowrap !important;
+            }
+            .menu-card-icon {
+                height: 110px !important;
+                font-size: 46px !important;
+            }
+            .menu-category-title {
+                font-size: 20px !important;
+            }
+            .container {
+                padding: 40px 0 !important;
+            }
+            .hero-buttons {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+                padding: 0 20px !important;
+            }
+            .hero-buttons .btn {
+                width: 100% !important;
+                text-align: center !important;
+            }
+            .btn-secondary {
+                margin-right: 0 !important;
+            }
+            .stats-grid {
+                gap: 15px !important;
+            }
+            .stat-item i {
+                font-size: 30px !important;
+            }
+            .stat-item .counter {
+                font-size: 26px !important;
+            }
+            .offer-card {
+                padding: 25px 20px !important;
+            }
+            .nav-logo {
+                font-size: 18px !important;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // 2. تفعيل الحركات والمؤثرات عند تحريك الصفحة (Scroll Effects)
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
@@ -522,6 +602,7 @@ if (bookingForm) {
 document.addEventListener('DOMContentLoaded', () => {
     injectMenuStyles();
     injectGlobalAnimations();
+    injectMobileFixes();
     renderCategoryTabs('all');
     displayMenu();
     startCounters();
